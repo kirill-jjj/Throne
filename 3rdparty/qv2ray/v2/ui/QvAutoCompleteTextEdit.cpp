@@ -116,15 +116,23 @@ namespace Qv2ray::ui::widgets {
     }
 
     void AutoCompleteTextEdit::keyPressEvent(QKeyEvent *e) {
+        if (e->key() == Qt::Key_Tab && e->modifiers() == Qt::NoModifier) {
+            focusNextPrevChild(true);
+            return;
+        }
+        if (e->key() == Qt::Key_Backtab && e->modifiers() == Qt::ShiftModifier) {
+            focusNextPrevChild(false);
+            return;
+        }
+
         const bool hasCtrlOrShiftModifier = e->modifiers().testFlag(Qt::ControlModifier) || e->modifiers().testFlag(Qt::ShiftModifier);
         const bool hasOtherModifiers = (e->modifiers() != Qt::NoModifier) && !hasCtrlOrShiftModifier; // has other modifiers
         //
         const bool isSpace = (e->modifiers().testFlag(Qt::ShiftModifier) || e->modifiers().testFlag(Qt::NoModifier)) //
                              && e->key() == Qt::Key_Space;
-        const bool isTab = (e->modifiers().testFlag(Qt::NoModifier) && e->key() == Qt::Key_Tab);
         const bool isOtherSpace = e->text() == "　";
         //
-        if (isSpace && !lineUnderCursor().startsWith("processName:") && !lineUnderCursor().startsWith("processPath:") || isTab || isOtherSpace) {
+        if (isSpace && !lineUnderCursor().startsWith("processName:") && !lineUnderCursor().startsWith("processPath:") || isOtherSpace) {
             QToolTip::showText(this->mapToGlobal(QPoint(0, 0)), tr("You can not input space characters here."), this, QRect{}, 2000);
             return;
         }
