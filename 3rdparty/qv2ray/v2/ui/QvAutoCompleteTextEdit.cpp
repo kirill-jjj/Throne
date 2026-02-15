@@ -117,15 +117,6 @@ namespace Qv2ray::ui::widgets {
     }
 
     void AutoCompleteTextEdit::keyPressEvent(QKeyEvent *e) {
-        if (e->key() == Qt::Key_Tab) {
-            focusNextPrevChild(true);
-            return;
-        }
-        if (e->key() == Qt::Key_Backtab) {
-            focusNextPrevChild(false);
-            return;
-        }
-
         const bool hasCtrlOrShiftModifier = e->modifiers().testFlag(Qt::ControlModifier) || e->modifiers().testFlag(Qt::ShiftModifier);
         const bool hasOtherModifiers = (e->modifiers() != Qt::NoModifier) && !hasCtrlOrShiftModifier; // has other modifiers
         //
@@ -144,8 +135,6 @@ namespace Qv2ray::ui::widgets {
                 case Qt::Key_Enter:
                 case Qt::Key_Return:
                 case Qt::Key_Escape:
-                case Qt::Key_Tab:
-                case Qt::Key_Backtab:
                     e->ignore();
                     return; // let the completer do default behavior
 
