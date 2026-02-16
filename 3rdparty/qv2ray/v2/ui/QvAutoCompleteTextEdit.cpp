@@ -65,6 +65,7 @@ namespace Qv2ray::ui::widgets {
     AutoCompleteTextEdit::AutoCompleteTextEdit(const QString &prefix, const QStringList &sourceStrings, QWidget *parent) : QPlainTextEdit(parent) {
         this->prefix = prefix;
         this->setLineWrapMode(QPlainTextEdit::NoWrap);
+        this->setTabChangesFocus(true);
         c = new QCompleter(this);
         c->setModel(new QStringListModel(sourceStrings, c));
         c->setWidget(this);
@@ -116,6 +117,11 @@ namespace Qv2ray::ui::widgets {
     }
 
     void AutoCompleteTextEdit::keyPressEvent(QKeyEvent *e) {
+        if (e->key() == Qt::Key_Tab || e->key() == Qt::Key_Backtab) {
+            QPlainTextEdit::keyPressEvent(e);
+            return;
+        }
+
         const bool hasCtrlOrShiftModifier = e->modifiers().testFlag(Qt::ControlModifier) || e->modifiers().testFlag(Qt::ShiftModifier);
         const bool hasOtherModifiers = (e->modifiers() != Qt::NoModifier) && !hasCtrlOrShiftModifier; // has other modifiers
         //
